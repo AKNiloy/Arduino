@@ -1,1 +1,95 @@
+#include <VirtualWire.h>
+int forward= 4;
+int backward= 3;
+int right= 5;
+int left= 6;
+int stop= 8;
+int led_on= 10;
+int led_off= 7;
+int flipflop= 2;
+int remotepins[]={2,3,4,5,6,7,8,10};
 
+void setup() {
+  Serial.begin(9600);
+  int i;
+  
+  vw_setup(2000);
+  vw_set_tx_pin(12);
+  for(i=0;i<9;i++){
+    pinMode(remotepins[i],INPUT);
+    digitalWrite(remotepins[i],HIGH);//Pushbutton become low when they are pressed
+  }
+}
+
+void loop() {
+   char *msg;
+   if(digitalRead(forward) == LOW) {
+    char *msg="1";
+    digitalWrite(13,true);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,false);
+    
+   }
+   if(digitalRead(backward)==LOW) {
+    char *msg="2";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+    if(digitalRead(left)==LOW) {
+    char *msg="3";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+    if(digitalRead(right)==LOW) {
+    char *msg="4";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+    if(digitalRead(stop)==LOW) {
+    char *msg="5";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+    if(digitalRead(led_on)==LOW) {
+    char *msg="6";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+    if(digitalRead(led_off)==LOW) {
+    char *msg="7";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+      if(digitalRead(flipflop)==LOW) {
+    char *msg="8";
+    digitalWrite(13,HIGH);
+    vw_send((uint8_t *)msg,strlen(msg));
+    vw_wait_tx();
+    digitalWrite(13,LOW);
+    
+   }
+   
+    
+ 
+   
+  
+}
