@@ -1,0 +1,131 @@
+#include <VirtualWire.h>
+int En1=5;
+int En2=3;
+int A=8;
+int B=9;
+int C=10;
+int D=11;
+int motorpins[]={5,3,8,9,10,11};
+int left_1=4;
+int left_2=6;
+int right_1=7;
+int right_2=12;
+int ledpins[]={4,6,7,12};
+void setup() {
+Serial.begin(9600); 
+int i;
+for(i=0;i<6;i++)
+{pinMode(motorpins[i],OUTPUT);}
+for(i=0;i<5;i++){pinMode(ledpins[i],OUTPUT);}
+
+vw_setup(2000);
+vw_set_rx_pin(2);
+vw_rx_start();
+
+}
+void loop() {
+ uint8_t buf[VW_MAX_MESSAGE_LEN];
+ uint8_t buflen=VW_MAX_MESSAGE_LEN;
+ if(vw_get_message(buf,&buflen)){
+  int z;
+  digitalWrite(13,true);
+  for(z=0;z<buflen;z++){
+    if(buf[z]=='1'){FORWARD();}
+    if(buf[z]=='2'){BACKWARD();}
+    if(buf[z]=='4'){RIGHT();}
+    if(buf[z]=='3'){LEFT();}
+    if(buf[z]=='5'){STOP();}
+    if(buf[z]=='6'){led_on();}
+    if(buf[z]=='7'){led_off();}
+    if(buf[z]=='8'){flipflop();}
+    }
+   }
+  digitalWrite(13,false);
+}
+void FORWARD() {
+  
+analogWrite(En1,255);
+analogWrite(En2,255);
+digitalWrite(A,HIGH);
+digitalWrite(B,LOW);
+digitalWrite(C,HIGH);
+digitalWrite(D,LOW);
+
+}
+void BACKWARD() {
+  
+analogWrite(En1,255);
+analogWrite(En2,255);
+digitalWrite(A,LOW);
+digitalWrite(B,HIGH);
+digitalWrite(C,LOW);
+digitalWrite(D,HIGH);
+
+}
+void RIGHT() {
+  
+analogWrite(En1,255);
+analogWrite(En2,255);
+digitalWrite(A,LOW);
+digitalWrite(B,LOW);
+digitalWrite(C,HIGH);
+digitalWrite(D,LOW);
+
+}
+void LEFT() {
+  
+analogWrite(En1,255);
+analogWrite(En2,255);
+digitalWrite(A,HIGH);
+digitalWrite(B,LOW);
+digitalWrite(C,LOW);
+digitalWrite(D,LOW);
+
+}
+void STOP() {
+  
+analogWrite(En1,255);
+analogWrite(En2,255);
+digitalWrite(A,LOW);
+digitalWrite(B,LOW);
+digitalWrite(C,LOW);
+digitalWrite(D,LOW);
+
+}
+void led_on(){
+ digitalWrite(left_1,HIGH);
+digitalWrite(left_2,HIGH);
+digitalWrite(right_1,HIGH);
+digitalWrite(right_2,HIGH);
+  }
+  
+  
+
+void led_off(){
+
+digitalWrite(left_1,LOW);
+digitalWrite(left_2,LOW);
+digitalWrite(right_1,LOW);
+digitalWrite(right_2,LOW);
+  
+  
+}
+void flipflop(){
+digitalWrite(left_1,HIGH);
+digitalWrite(left_2,LOW);
+delay(1000);
+digitalWrite(left_1,LOW);
+digitalWrite(left_2,HIGH);
+delay(1000);
+digitalWrite(right_1,HIGH);
+digitalWrite(right_2,LOW);
+delay(1000);
+digitalWrite(right_1,LOW);
+digitalWrite(right_2,HIGH);
+delay(1000);
+
+  
+  
+}
+
+
