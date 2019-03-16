@@ -1,0 +1,87 @@
+/*Program to send SMS from ESP8266 via IFTTT.
+/*MTE_16_Ruet 
+* /AK_NIloy
+*/
+
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
+
+const char* ssid = "Redmi";
+const char* password = "vodornache";
+
+const char* host = "maker.ifttt.com";
+const int httpsPort = 443;
+int sensorPin = A0; // select the input pin for LDR
+
+int sensorValue = 0; // variable to store the value coming from the sensor
+int i=0;
+void setup() {
+  Serial.begin(115200);
+  pinMode(5,OUTPUT);
+  Serial.println();
+  Serial.print("connecting to ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop()
+{
+sensorValue = analogRead(sensorPin); // read the value from the sensor
+Serial.println(sensorValue); //prints the values coming from the sensor on the screen
+
+delay(100);
+if(sensorValue<500)
+{
+
+while(i<10)
+{
+  digitalWrite(5,1);
+  delay(500);
+  digitalWrite(5,0);
+  delay(500);
+  i++;
+  
+}
+i=0;
+  WiFiClientSecure client;
+  Serial.print("connecting to ");
+  Serial.println(host);
+  if (!client.connect(host, httpsPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+   
+  String url = "/trigger/Laser/with/key/CPOFqOpT3RLyFhEqXUTACqjFdtAWiEP4FUuAs9QdM0";
+  Serial.print("requesting URL: ");
+  Serial.println(url);
+
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" +
+               "User-Agent: BuildFailureDetectorESP8266\r\n" +
+               "Connection: close\r\n\r\n");
+
+  Serial.println("request sent");
+  while (client.connected()) {
+    String line = client.readStringUntil('\n');
+    if (line == "\r") {
+      Serial.println("headers received");
+      break;
+    }
+  }
+  String line = client.readStringUntil('\n');
+
+  Serial.println("reply was:");
+  Serial.println("==========");
+  Serial.println(line);
+  Serial.println("==========");
+  Serial.println("closing connection");
+}
+}
